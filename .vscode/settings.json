@@ -1,0 +1,12 @@
+{
+  "eslint.nodePath": ".yarn/sdks",
+  "evenBetterToml.formatter.alignEntries": true,
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "search.exclude": {
+    "**/.pnp.*": true,
+    "**/.yarn": true
+  },
+  "svelte.language-server.ls-path": ".yarn/sdks/svelte-language-server/bin/server.js",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": ".yarn/sdks/typescript/lib"
+}
