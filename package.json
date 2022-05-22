@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
+    "start": "sirv public --no-clear -s",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "clean": "rm -rf .pnp.cjs .pnp.loader.mjs yarn.lock node_modules public/build .yarn/cache .yarn/unplugged .yarn/install-state.gz",
     "upgrade": "yarn set version latest && yarn up -R '*' && yarn dlx @yarnpkg/sdks vscode && yarn dedupe"

@@ -6,13 +6,13 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-}
-
-body {
   color: #333;
   margin: 0;
-  padding: 1rem;
   box-sizing: border-box;
+}
+
+main {
+  padding: 0 1rem 1rem 1rem;
 }
 
 a {
@@ -71,9 +71,81 @@ button:focus {
 h1 {
   font-size: 1.5rem;
   font-weight: 700;
+  padding-top: 1rem;
+  margin: 0 0 1rem 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 hr {
   border-color: grey;
   margin: 4rem;
+}
+
+.positive {
+  color: rgb(0, 151, 0);
+}
+
+.negative {
+  color: red;
+}
+
+.neutral {
+  color: grey;
+}
+
+.table {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  background: #f0f0f0;
+  font-size: 0.9rem;
+}
+
+td {
+  padding: 1.5rem 0.75rem;
+}
+
+tbody td {
+  border-top: 1px solid #fff;
+}
+
+th {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #666666;
+}
+
+.text-start {
+  text-align: start;
+}
+
+td.text-start {
+  font-weight: 700;
+}
+
+td.text-start div {
+  display: flex;
+  align-items: center;
+}
+
+td.text-start div img {
+  width: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-end {
+  text-align: end;
+}
+
+td.text-end {
+  font-weight: 700;
 }

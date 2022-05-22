@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { navigateTo } from 'svelte-router-spa'
   import Search from '../components/Search.svelte'
 
   class Price {
@@ -32,6 +33,10 @@
 
   let cryptoToFilter = ''
   let oracles: Oracle[] = []
+
+  const cryptoClicked = (symbol: string) => () => {
+    navigateTo(`insight/${symbol}`)
+  }
 
   onMount(async () => {
     oracles = await fetch('https://hodler-signal.backverse.dev/oracles')
@@ -66,7 +71,7 @@
     </thead>
     <tbody>
       {#each oracles.filter((oracle) => RegExp(cryptoToFilter, 'i').test(oracle.symbol)) as oracle}
-        <tr>
+        <tr on:click={cryptoClicked(oracle.symbol)}>
           <td class="text-start">
             <div>
               <img
@@ -93,74 +98,3 @@
     </tbody>
   </table>
 </main>
-
-<style>
-  main {
-    padding-bottom: 1rem;
-  }
-
-  .positive {
-    color: rgb(0, 151, 0);
-  }
-
-  .negative {
-    color: red;
-  }
-
-  .neutral {
-    color: grey;
-  }
-
-  .table {
-    width: 100%;
-    margin-top: 1rem;
-    border-radius: 0.5rem;
-    background: #f0f0f0;
-    font-size: 0.9rem;
-  }
-
-  td {
-    padding: 1.5rem 0.75rem;
-  }
-
-  tbody td {
-    border-top: 1px solid #fff;
-  }
-
-  th {
-    padding: 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: #666666;
-  }
-
-  .text-start {
-    text-align: start;
-  }
-
-  td.text-start {
-    font-weight: 700;
-  }
-
-  td.text-start div {
-    display: flex;
-    align-items: center;
-  }
-
-  td.text-start div img {
-    width: 1.5rem;
-    margin-right: 0.5rem;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  .text-end {
-    text-align: end;
-  }
-
-  td.text-end {
-    font-weight: 700;
-  }
-</style>
