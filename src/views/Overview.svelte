@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import Search from '../components/Search.svelte'
 
   class Price {
@@ -29,28 +30,31 @@
     icon_id: string
   }
 
-  const getOracles = fetch('https://hodler-signal.backverse.dev/oracles')
-    .then<Oracle[]>((response) => response.json())
-    .then((oracles) => oracles.sort((a, b) => a.symbol.localeCompare(b.symbol)))
-    .then((oracles) => {
-      oracles.forEach((oracle) => {
-        oracle.prices.forEach(({ arbitrage }) => {
-          if (!oracle.arbitrage) oracle.arbitrage = arbitrage
-          else oracle.arbitrage = oracle.arbitrage > arbitrage ? oracle.arbitrage : arbitrage
-        })
+  let cryptoToFilter = ''
+  let oracles: Oracle[] = []
+
+  onMount(async () => {
+    oracles = await fetch('https://hodler-signal.backverse.dev/oracles')
+      .then<Oracle[]>((response) => response.json())
+      .then((oracles) => oracles.sort((a, b) => a.symbol.localeCompare(b.symbol)))
+      .catch<Oracle[]>((error: unknown) => {
+        console.error(error)
+        return []
       })
-      return oracles
+
+    oracles.forEach((oracle) => {
+      oracle.prices.forEach(({ arbitrage }) => {
+        if (!oracle.arbitrage) oracle.arbitrage = arbitrage
+        else oracle.arbitrage = oracle.arbitrage > arbitrage ? oracle.arbitrage : arbitrage
+      })
     })
-    .catch<Oracle[]>((error: unknown) => {
-      console.error(error)
-      return []
-    })
+  })
 </script>
 
 <main>
   <h1>Overview</h1>
 
-  <Search />
+  <Search bind:value={cryptoToFilter} />
 
   <table class="table">
     <thead>
@@ -61,33 +65,31 @@
       </tr>
     </thead>
     <tbody>
-      {#await getOracles then oracles}
-        {#each oracles as oracle}
-          <tr>
-            <td class="text-start">
-              <div>
-                <img
-                  src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle.icon_id}.png"
-                  alt={oracle.symbol}
-                />
-                {oracle.symbol.toUpperCase()}
-              </div>
-            </td>
-            <td class="text-center">{oracle.ask_avg_price.toFixed(8)}</td>
-            <td class="text-end">
-              <div
-                class={oracle.arbitrage > 0.005
-                  ? 'positive'
-                  : oracle.arbitrage < -0.005
-                  ? 'negative'
-                  : 'neutral'}
-              >
-                {(oracle.arbitrage * 100).toFixed(2)}%
-              </div>
-            </td>
-          </tr>
-        {/each}
-      {/await}
+      {#each oracles.filter((oracle) => RegExp(cryptoToFilter, 'i').test(oracle.symbol)) as oracle}
+        <tr>
+          <td class="text-start">
+            <div>
+              <img
+                src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle.icon_id}.png"
+                alt={oracle.symbol}
+              />
+              {oracle.symbol.toUpperCase()}
+            </div>
+          </td>
+          <td class="text-center">{oracle.ask_avg_price.toFixed(8)}</td>
+          <td class="text-end">
+            <div
+              class={oracle.arbitrage > 0.005
+                ? 'positive'
+                : oracle.arbitrage < -0.005
+                ? 'negative'
+                : 'neutral'}
+            >
+              {(oracle.arbitrage * 100).toFixed(2)}%
+            </div>
+          </td>
+        </tr>
+      {/each}
     </tbody>
   </table>
 </main>

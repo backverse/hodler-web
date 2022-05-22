@@ -1,3 +1,7 @@
+<script lang="ts">
+  export let value: string
+</script>
+
 <section>
   <div class="search-icon">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,7 +13,7 @@
       />
     </svg>
   </div>
-  <input class="search-payload" spellcheck="false" />
+  <input class="search-payload" spellcheck="false" bind:value />
 </section>
 
 <style>
