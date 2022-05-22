@@ -26,6 +26,7 @@
     bid_best_symbol: string
     prices: Price[]
     arbitrage: number
+    icon_id: string
   }
 
   const getOracles = fetch('https://hodler-signal.backverse.dev/oracles')
@@ -63,7 +64,15 @@
       {#await getOracles then oracles}
         {#each oracles as oracle}
           <tr>
-            <td class="text-start">{oracle.symbol.toUpperCase()}</td>
+            <td class="text-start">
+              <div>
+                <img
+                  src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle.icon_id}.png"
+                  alt={oracle.symbol}
+                />
+                {oracle.symbol.toUpperCase()}
+              </div>
+            </td>
             <td class="text-center">{oracle.ask_avg_price.toFixed(8)}</td>
             <td class="text-end">
               <div
@@ -117,7 +126,7 @@
   }
 
   th {
-    padding: 1rem 0.75rem;
+    padding: 0.75rem;
     font-size: 0.75rem;
     font-weight: 500;
     color: #666666;
@@ -129,6 +138,16 @@
 
   td.text-start {
     font-weight: 700;
+  }
+
+  td.text-start div {
+    display: flex;
+    align-items: center;
+  }
+
+  td.text-start div img {
+    width: 1.5rem;
+    margin-right: 0.5rem;
   }
 
   .text-center {
