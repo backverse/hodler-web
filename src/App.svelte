@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router } from 'svelte-router-spa'
   import type { Route } from 'svelte-router-spa/types/components/router'
-  import Header from './components/Header.svelte'
+  import HeaderBar from './components/HeaderBar.svelte'
   import Insight from './views/Insight.svelte'
   import Overview from './views/Overview.svelte'
 
@@ -17,5 +17,5 @@
   ]
 </script>
 
-<Header />
+<HeaderBar />
 <Router {routes} />

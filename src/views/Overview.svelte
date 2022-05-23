@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { navigateTo } from 'svelte-router-spa'
+  import Header from '../components/Header.svelte'
   import Search from '../components/Search.svelte'
 
   class Price {
@@ -57,7 +58,7 @@
 </script>
 
 <main>
-  <h1>Overview</h1>
+  <Header header="Overview" />
 
   <Search bind:value={cryptoToFilter} />
 
@@ -75,6 +76,7 @@
           <td class="text-start">
             <div>
               <img
+                class="symbol-img"
                 src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle.icon_id}.png"
                 alt={oracle.symbol}
               />
@@ -85,10 +87,10 @@
           <td class="text-end">
             <div
               class={oracle.arbitrage > 0.005
-                ? 'positive'
+                ? 'pnl profit'
                 : oracle.arbitrage < -0.005
-                ? 'negative'
-                : 'neutral'}
+                ? 'pnl loss'
+                : 'pnl neutral'}
             >
               {(oracle.arbitrage * 100).toFixed(2)}%
             </div>

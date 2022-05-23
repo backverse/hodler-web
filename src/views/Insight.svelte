@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import Header from '../components/Header.svelte'
 
   export let currentRoute: Record<string, any>
   const symbol: string = currentRoute.namedParams.symbol
@@ -41,29 +42,40 @@
   })
 </script>
 
-<main>
-  <div class="insight-header">
-    <h1>Insight</h1>
-    | {oracle?.symbol.toUpperCase() || ''}
-    <img
-      src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle?.icon_id}.png"
-      alt={symbol}
+{#if oracle}
+  <main>
+    <Header
+      header="Insight"
+      subheader={oracle?.symbol.toUpperCase()}
+      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle?.icon_id}.png"
     />
-  </div>
 
-  {#if oracle}
-    <div class="insight-block">
-      <div class="label">Average Price</div>
-      <div class="value">
-        <div><span>Ask</span> {oracle.ask_avg_price.toFixed(8)}</div>
-        <div><span>Bid</span> {oracle.bid_avg_price.toFixed(8)}</div>
+    <div class="insight-blocks">
+      <div class="insight-block">
+        <div class="label">Average Price</div>
+        <div>
+          <div>
+            <span class="type">Ask</span>
+            <span class="value">{oracle.ask_avg_price.toFixed(8)}</span>
+          </div>
+          <div>
+            <span class="type">Bid</span>
+            <span class="value">{oracle.bid_avg_price.toFixed(8)}</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="insight-block">
-      <div class="label">Best Price</div>
-      <div class="value">
-        <div><span>Ask</span> {oracle.ask_best_price.toFixed(8)}</div>
-        <div><span>Bid</span> {oracle.bid_best_price.toFixed(8)}</div>
+      <div class="insight-block">
+        <div class="label">Best Price</div>
+        <div>
+          <div>
+            <span class="type">Ask</span>
+            <span class="value">{oracle.ask_best_price.toFixed(8)}</span>
+          </div>
+          <div>
+            <span class="type">Bid</span>
+            <span class="value">{oracle.bid_best_price.toFixed(8)}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -83,19 +95,19 @@
             <td class="text-start">{price.exchange.toUpperCase()} </td>
             <td
               class={price.ask_premium > 0.005
-                ? 'text-center negative'
+                ? 'text-center pnl loss'
                 : price.ask_premium < -0.005
-                ? 'text-center positive'
-                : 'text-center neutral'}
+                ? 'text-center pnl profit'
+                : 'text-center pnl neutral'}
             >
               {(price.ask_premium * 100).toFixed(2)}%
             </td>
             <td
               class={price.bid_premium > 0.005
-                ? 'text-end positive'
+                ? 'text-end pnl profit'
                 : price.bid_premium < -0.005
-                ? 'text-end negative'
-                : 'text-end neutral'}
+                ? 'text-end pnl loss'
+                : 'text-end pnl neutral'}
             >
               {(price.bid_premium * 100).toFixed(2)}%
             </td>
@@ -110,21 +122,21 @@
       <thead>
         <tr>
           <th scope="col" class="text-start">Exchange</th>
-          <th scope="col" class="text-center">Best Route</th>
-          <th scope="col" class="text-end">Rate</th>
+          <th scope="col" class="text-center">Best Routes</th>
+          <th scope="col" class="text-end">PnL</th>
         </tr>
       </thead>
       <tbody>
         {#each oracle.prices as price}
           <tr>
             <td class="text-start">{price.exchange.toUpperCase()} </td>
-            <td class="best-route"> -> {oracle.bid_best_exchange.toUpperCase()} </td>
+            <td class="text-center">{oracle.bid_best_exchange.toUpperCase()}</td>
             <td
               class={price.arbitrage > 0.005
-                ? 'text-end positive'
+                ? 'text-end pnl profit'
                 : price.arbitrage < -0.005
-                ? 'text-end negative'
-                : 'text-end neutral'}
+                ? 'text-end pnl loss'
+                : 'text-end pnl neutral'}
             >
               {(price.arbitrage * 100).toFixed(2)}%
             </td>
@@ -132,51 +144,44 @@
         {/each}
       </tbody>
     </table>
-  {/if}
-</main>
+  </main>
+{/if}
 
 <style>
-  div.insight-header {
-    display: flex;
-    font-weight: 400;
-    align-items: center;
+  div.insight-blocks + h2,
+  .table + h2 {
+    margin-top: 2rem;
   }
 
-  div.insight-header h1 {
-    margin-right: 1rem;
-  }
-
-  div.insight-header img {
-    margin-left: 0.5rem;
-    height: 1.5rem;
+  div.insight-blocks {
+    background: var(--background-secondary);
+    border-radius: 0.5rem;
   }
 
   div.insight-block {
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0;
+    padding: 1.5rem;
+    align-items: center;
   }
 
   div.insight-block + div.insight-block {
-    border-top: 1px solid lightgray;
+    border-top: var(--border-primary);
   }
 
   div.insight-block .label {
-    font-weight: 400;
-    font-size: 0.75rem;
+    color: var(--default-secondary);
+    font-weight: var(--bold);
   }
 
-  div.insight-block .value span {
-    font-weight: 300;
-    font-size: 0.75rem;
+  div.insight-block .type {
+    color: var(--default-secondary);
+    font-size: 0.875rem;
+    font-weight: var(--regular);
   }
 
   div.insight-block .value {
-    font-weight: 700;
-    font-size: 0.875rem;
-  }
-
-  .best-route {
-    font-size: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: var(--bold);
   }
 </style>
