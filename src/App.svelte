@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Router } from 'svelte-router-spa'
   import type { Route } from 'svelte-router-spa/types/components/router'
-  import HeaderBar from './components/HeaderBar.svelte'
+  import Layout from './components/Layout.svelte'
+  import Portfolio from './views/Portfolio.svelte'
   import Insight from './views/Insight.svelte'
   import Overview from './views/Overview.svelte'
 
@@ -9,13 +10,19 @@
     {
       name: '/',
       component: Overview,
+      layout: Layout,
     },
     {
       name: 'insight/:symbol',
       component: Insight,
+      layout: Layout,
+    },
+    {
+      name: 'portfolio',
+      component: Portfolio,
+      layout: Layout,
     },
   ]
 </script>
 
-<HeaderBar />
 <Router {routes} />
