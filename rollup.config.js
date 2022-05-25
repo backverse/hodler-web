@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
+import compileTypescript from '@rollup/plugin-typescript'
 import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
 import sveltePreprocess from 'svelte-preprocess'
@@ -66,6 +67,7 @@ export default {
       sourceMap: !production,
       inlineSources: !production,
     }),
+    compileTypescript(),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

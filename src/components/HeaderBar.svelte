@@ -1,5 +1,21 @@
 <script lang="ts">
   import { navigateTo } from 'svelte-router-spa'
+  import { BasePrice, getBasePrices } from '../client'
+  import { basePrice } from '../store'
+
+  const basePrices: BasePrice[] = []
+  let exchangeId = Number(localStorage.getItem('base-exchange-id')) || 0
+
+  const updateExchangeId = () => {
+    if (++exchangeId >= basePrices.length) exchangeId = 0
+    basePrice.set(basePrices[exchangeId].ask_price)
+    localStorage.setItem('base-exchange-id', exchangeId.toString())
+  }
+
+  getBasePrices().then((prices) => {
+    basePrices.push(...prices)
+    basePrice.set(basePrices[exchangeId].ask_price)
+  })
 
   const toHome = () => {
     navigateTo('/')
@@ -19,8 +35,18 @@
 </script>
 
 <div>
-  <img src="/favicon.png" alt="hodler" on:click={toHome} />
-  <span class="material-symbols-outlined" on:click={toggleTheme}> dark_mode </span>
+  <img class="logo" src="/favicon.png" alt="hodler" on:click={toHome} />
+  <div>
+    <span class="symbol-value">{$basePrice?.toFixed(2)}</span>
+    <img
+      class="symbol-icon"
+      src="https://s2.coinmarketcap.com/static/img/coins/32x32/1.png"
+      alt="base price"
+      on:click={updateExchangeId}
+    />
+    <span class="seperator">|</span>
+    <span class="material-symbols-outlined" on:click={toggleTheme}> dark_mode </span>
+  </div>
 </div>
 
 <style>
@@ -36,8 +62,18 @@
     padding: 0 0.75rem;
   }
 
-  img {
+  span.symbol-value,
+  span.seperator {
+    padding: 1rem;
+  }
+
+  img.logo {
     height: 1.75rem;
+    cursor: pointer;
+  }
+
+  img.symbol-icon {
+    height: 1.25rem;
     cursor: pointer;
   }
 </style>
