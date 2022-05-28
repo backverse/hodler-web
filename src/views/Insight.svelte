@@ -1,66 +1,100 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Header from '../components/Header.svelte'
+  import { basePrice } from '../store'
 
   export let currentRoute: Record<string, any>
   const symbol: string = currentRoute.namedParams.symbol
 
-  class Price {
-    arbitrage: number
-    ask_original: number
+  class Arbitrage {
+    exchange: string
+    best_routes: string
+    rate: number
+  }
+
+  class Insight {
+    symbol: string
+    volume: number
+    percent_change: number
+    average_ask_price: number
+    average_bid_price: number
+    best_ask_exchange: string
+    best_ask_price: number
+    best_ask_ticker_name: string
+    best_bid_exchange: string
+    best_bid_price: number
+    best_bid_ticker_name: string
+    best_arbitrage: number
+    best_ask_premium: number
+    best_bid_premium: number
+    symbol_id: string
+  }
+
+  class Premium {
+    exchange: string
     ask_premium: number
     ask_price: number
-    bid_original: number
     bid_premium: number
     bid_price: number
-    exchange: string
-    symbol: string
   }
 
-  class Oracle {
-    symbol: string
-    ask_avg_price: number
-    ask_best_exchange: string
-    ask_best_price: number
-    ask_best_symbol: string
-    bid_avg_price: number
-    bid_best_exchange: string
-    bid_best_original: number
-    bid_best_price: number
-    bid_best_symbol: string
-    prices: Price[]
-    arbitrage: number
-    icon_id: string
-  }
-
-  let oracle: Oracle
+  let arbitrages: Arbitrage[]
+  let insight: Insight
+  let premiums: Premium[]
 
   onMount(async () => {
-    oracle = await fetch('https://hodler-signal.backverse.dev/oracles')
-      .then<Oracle[]>((response) => response.json())
-      .then((oracles) => oracles.find((oracle) => RegExp(oracle.symbol, 'i')?.test(symbol)))
+    await fetch(`https://hodler-signal.backverse.dev/insights?symbol=${symbol}`)
+      .then<{ arbitrages: Arbitrage[]; insight: Insight; premiums: Premium[] }>((response) =>
+        response.json(),
+      )
+      .then((response) => {
+        arbitrages = response.arbitrages
+        insight = response.insight
+        premiums = response.premiums
+      })
   })
 </script>
 
-{#if oracle}
+{#if insight}
   <main>
     <Header
       header="Insight"
-      subheader={oracle?.symbol.toUpperCase()}
-      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle?.icon_id}.png"
+      subheader={insight?.symbol.toUpperCase()}
+      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{insight.symbol_id}.png"
     />
 
     <div class="insight-blocks">
       <div class="insight-block">
         <div class="label">Average Price</div>
         <div>
+          <div class="insight-row">
+            <span class="type">Volume</span>
+            <span class="value"
+              >{(insight.volume * insight.average_ask_price * $basePrice).toFixed(2)}</span
+            >
+          </div>
+          <div class="insight-row">
+            <span class="type">Change</span>
+            <span
+              class={insight.percent_change > 0.5
+                ? 'value pnl profit'
+                : insight.percent_change < -0.5
+                ? 'value pnl loss'
+                : 'value pnl neutral'}>{insight.percent_change.toFixed(2)}%</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="insight-block">
+        <div class="label">Average Price</div>
+        <div>
           <div>
             <span class="type">Ask</span>
-            <span class="value">{oracle.ask_avg_price.toFixed(8)}</span>
+            <span class="value">{insight.average_ask_price.toFixed(8)}</span>
           </div>
           <div>
             <span class="type">Bid</span>
-            <span class="value">{oracle.bid_avg_price.toFixed(8)}</span>
+            <span class="value">{insight.average_bid_price.toFixed(8)}</span>
           </div>
         </div>
       </div>
@@ -69,11 +103,11 @@
         <div>
           <div>
             <span class="type">Ask</span>
-            <span class="value">{oracle.ask_best_price.toFixed(8)}</span>
+            <span class="value">{insight.best_ask_price.toFixed(8)}</span>
           </div>
           <div>
             <span class="type">Bid</span>
-            <span class="value">{oracle.bid_best_price.toFixed(8)}</span>
+            <span class="value">{insight.best_bid_price.toFixed(8)}</span>
           </div>
         </div>
       </div>
@@ -90,26 +124,26 @@
         </tr>
       </thead>
       <tbody>
-        {#each oracle.prices as price}
+        {#each premiums as premium}
           <tr>
-            <td class="text-start">{price.exchange.toUpperCase()} </td>
+            <td class="text-start">{premium.exchange.toUpperCase()} </td>
             <td
-              class={price.ask_premium > 0.005
+              class={premium.ask_premium > 0.5
                 ? 'text-center pnl loss'
-                : price.ask_premium < -0.005
+                : premium.ask_premium < -0.5
                 ? 'text-center pnl profit'
                 : 'text-center pnl neutral'}
             >
-              {(price.ask_premium * 100).toFixed(2)}%
+              {premium.ask_premium.toFixed(2)}%
             </td>
             <td
-              class={price.bid_premium > 0.005
+              class={premium.bid_premium > 0.5
                 ? 'text-end pnl profit'
-                : price.bid_premium < -0.005
+                : premium.bid_premium < -0.5
                 ? 'text-end pnl loss'
                 : 'text-end pnl neutral'}
             >
-              {(price.bid_premium * 100).toFixed(2)}%
+              {premium.bid_premium.toFixed(2)}%
             </td>
           </tr>
         {/each}
@@ -127,18 +161,18 @@
         </tr>
       </thead>
       <tbody>
-        {#each oracle.prices as price}
+        {#each arbitrages as arbitrage}
           <tr>
-            <td class="text-start">{price.exchange.toUpperCase()} </td>
-            <td class="text-center">{oracle.bid_best_exchange.toUpperCase()}</td>
+            <td class="text-start">{arbitrage.exchange.toUpperCase()} </td>
+            <td class="text-center">{arbitrage.best_routes.toUpperCase()}</td>
             <td
-              class={price.arbitrage > 0.005
+              class={arbitrage.rate > 0.5
                 ? 'text-end pnl profit'
-                : price.arbitrage < -0.005
+                : arbitrage.rate < -0.5
                 ? 'text-end pnl loss'
                 : 'text-end pnl neutral'}
             >
-              {(price.arbitrage * 100).toFixed(2)}%
+              {arbitrage.rate.toFixed(2)}%
             </td>
           </tr>
         {/each}
@@ -163,6 +197,10 @@
     justify-content: space-between;
     padding: 1.5rem;
     align-items: center;
+  }
+
+  div.insight-row {
+    text-align-last: justify;
   }
 
   div.insight-block + div.insight-block {
