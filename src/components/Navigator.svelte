@@ -13,7 +13,7 @@
   <li
     class="navigator-item"
     on:click={to('/')}
-    class:active={/^(\/|\/insight\/\w+)$/.test(currentRoute.path)}
+    class:active={/^(\/|\/insights\/\w+)$/.test(currentRoute.path)}
   >
     <span class="material-symbols-outlined"> trending_up </span>
     OVERVIEW

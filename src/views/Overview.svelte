@@ -10,7 +10,7 @@
   let overviews: Overview[] = []
 
   const cryptoClicked = (symbol: string) => () => {
-    navigateTo(`insight/${symbol}`)
+    navigateTo(`insights/${symbol}`)
   }
 
   onMount(async () => {

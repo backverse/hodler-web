@@ -13,7 +13,7 @@
       layout: Layout,
     },
     {
-      name: 'insight/:symbol',
+      name: 'insights/:symbol',
       component: Insight,
       layout: Layout,
     },
