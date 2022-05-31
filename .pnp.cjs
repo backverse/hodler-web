@@ -58,6 +58,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["svelte-language-server", "npm:0.14.27"],\
             ["svelte-preprocess", "virtual:58e6137322185ea862b0acdf1a7306e3bfc8f5a144ad3a7f01039ccc362c763787a875914b211c731be16f5722d48c917cd4bf6d2f0013e61a4b865ea610675f#npm:4.10.6"],\
             ["svelte-router-spa", "virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:6.0.3"],\
+            ["svelte-simple-modal", "virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:1.3.3"],\
             ["tslib", "npm:2.4.0"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"]\
           ],\
@@ -3551,6 +3552,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["svelte-language-server", "npm:0.14.27"],\
             ["svelte-preprocess", "virtual:58e6137322185ea862b0acdf1a7306e3bfc8f5a144ad3a7f01039ccc362c763787a875914b211c731be16f5722d48c917cd4bf6d2f0013e61a4b865ea610675f#npm:4.10.6"],\
             ["svelte-router-spa", "virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:6.0.3"],\
+            ["svelte-simple-modal", "virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:1.3.3"],\
             ["tslib", "npm:2.4.0"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=7ad353"]\
           ],\
@@ -3697,6 +3699,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/svelte", null],\
             ["svelte", "npm:3.48.0"],\
             ["url-params-parser", "npm:1.0.4"]\
+          ],\
+          "packagePeers": [\
+            "@types/svelte",\
+            "svelte"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["svelte-simple-modal", [\
+        ["npm:1.3.3", {\
+          "packageLocation": "./.yarn/cache/svelte-simple-modal-npm-1.3.3-038847eea4-e2f0a2cd86.zip/node_modules/svelte-simple-modal/",\
+          "packageDependencies": [\
+            ["svelte-simple-modal", "npm:1.3.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:1.3.3", {\
+          "packageLocation": "./.yarn/__virtual__/svelte-simple-modal-virtual-2b3f34c569/0/cache/svelte-simple-modal-npm-1.3.3-038847eea4-e2f0a2cd86.zip/node_modules/svelte-simple-modal/",\
+          "packageDependencies": [\
+            ["svelte-simple-modal", "virtual:523f92577d6bcbd3334da2c61ecfbe9106ff9e28bdbc00f8170e1287d886a39bc27d7ba6d601ca9d3d6dcdc03901720ae9d8f2a419ca8781c7167ddb1f49df25#npm:1.3.3"],\
+            ["@types/svelte", null],\
+            ["svelte", "npm:3.48.0"]\
           ],\
           "packagePeers": [\
             "@types/svelte",\

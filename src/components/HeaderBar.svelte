@@ -1,51 +1,30 @@
 <script lang="ts">
+  import { getContext } from 'svelte'
   import { navigateTo } from 'svelte-router-spa'
-  import { BasePrice, getBasePrices } from '../client'
-  import { basePrice } from '../store'
-
-  const basePrices: BasePrice[] = []
-  let exchangeId = Number(localStorage.getItem('base-exchange-id')) || 0
-
-  const updateExchangeId = () => {
-    if (++exchangeId >= basePrices.length) exchangeId = 0
-    basePrice.set(basePrices[exchangeId].ask_price)
-    localStorage.setItem('base-exchange-id', exchangeId.toString())
-  }
-
-  getBasePrices().then((prices) => {
-    basePrices.push(...prices)
-    basePrice.set(basePrices[exchangeId].ask_price)
-  })
+  import Settings from '../modals/Settings.svelte'
+  import { baseCode, basePrice } from '../store'
 
   const toHome = () => {
     navigateTo('/')
   }
 
-  const DARK_THEME = 'dark-theme'
-  const LIGHT_THEME = 'light-theme'
-  const toggleTheme = () => {
-    document.body.classList.toggle(DARK_THEME) && localStorage.setItem('prefer-scheme', DARK_THEME)
-    document.body.classList.toggle(LIGHT_THEME) &&
-      localStorage.setItem('prefer-scheme', LIGHT_THEME)
+  const { open } = getContext('simple-modal')
+  const openSettingsModal = () => {
+    open(Settings)
   }
-
-  const theme = localStorage.getItem('prefer-scheme')
-  if (!theme) localStorage.setItem('prefer-scheme', DARK_THEME)
-  document.body.classList.add(theme || DARK_THEME)
 </script>
 
 <div>
   <img class="logo" src="/favicon.png" alt="hodler" on:click={toHome} />
   <div>
-    <span class="symbol-value">{$basePrice?.toFixed(2)}</span>
-    <img
-      class="symbol-icon"
-      src="https://s2.coinmarketcap.com/static/img/coins/32x32/1.png"
-      alt="base price"
-      on:click={updateExchangeId}
-    />
-    <span class="seperator">|</span>
-    <span class="material-symbols-outlined" on:click={toggleTheme}> dark_mode </span>
+    <span class="currency-label">
+      {$basePrice?.toLocaleString(undefined, { maximumFractionDigits: 2 }) || ''}
+      {$baseCode || ''}
+      = 1 BTC
+    </span>
+    <span class="material-symbols-outlined icon-settings" on:click={openSettingsModal}>
+      settings
+    </span>
   </div>
 </div>
 
@@ -62,18 +41,24 @@
     padding: 0 0.75rem;
   }
 
-  span.symbol-value,
-  span.seperator {
-    padding: 1rem;
+  span.icon-settings {
+    cursor: pointer;
+  }
+
+  .currency-label {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: var(--black);
+    background: var(--background-secondary);
+    border-radius: 1rem;
+    margin-right: 1rem;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   img.logo {
     height: 1.75rem;
-    cursor: pointer;
-  }
-
-  img.symbol-icon {
-    height: 1.25rem;
     cursor: pointer;
   }
 </style>

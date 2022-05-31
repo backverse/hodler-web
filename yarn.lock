@@ -2880,6 +2880,7 @@ __metadata:
     svelte-language-server: ^0.14.27
     svelte-preprocess: ^4.10.6
     svelte-router-spa: ^6.0.3
+    svelte-simple-modal: ^1.3.3
     tslib: ^2.4.0
     typescript: ^4.6.4
   languageName: unknown
@@ -2990,6 +2991,15 @@ __metadata:
   peerDependencies:
     svelte: ^3.36.0
   checksum: 35f9362c86c47582b31872cc61dff5657c3541493e4a0f622e0536fa98f6d4959a80ef3501f83436fdb82b6d027caf25a0170e304b133bf2564403b0fe2bd671
+  languageName: node
+  linkType: hard
+
+"svelte-simple-modal@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "svelte-simple-modal@npm:1.3.3"
+  peerDependencies:
+    svelte: ^3.31.2
+  checksum: e2f0a2cd867b3c1a8e6585fb8d75f0caf7c997275e7ec488beeeb25b8d8098a10194efb54e2f9df4f4905aef23d36a19b4af74c5d0c1a59b9128f8d108136c74
   languageName: node
   linkType: hard
 

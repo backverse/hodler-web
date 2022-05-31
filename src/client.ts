@@ -4,6 +4,7 @@ export class BasePrice {
   exchange: string
   ask_price: number
   bid_price: number
+  code: string
 }
 
 export const getBasePrices = () =>
