@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { getCurrencies } from '../client'
   import { Theme } from '../constant'
-  import { baseCode, basePrice, basePrices, exchangeId } from '../store'
+  import { currency, exchangeId } from '../store'
 
   let isDarkMode = localStorage.getItem('prefer-scheme') === Theme.DARK
   const toggleTheme = () => {
@@ -9,10 +10,10 @@
     localStorage.setItem('prefer-scheme', isDarkMode ? Theme.DARK : Theme.LIGHT)
   }
 
-  const updateExchangeId = () => {
-    if (++$exchangeId >= $basePrices.length) $exchangeId = 0
-    $basePrice = $basePrices[$exchangeId].ask_price
-    $baseCode = $basePrices[$exchangeId].code
+  const updateExchangeId = async () => {
+    const currencies = await getCurrencies()
+    if (++$exchangeId >= currencies.length) $exchangeId = 0
+    $currency = currencies[$exchangeId]
     localStorage.setItem('base-exchange-id', $exchangeId.toString())
   }
 </script>
@@ -55,7 +56,7 @@
   }
 
   .settings-label {
-    padding: 0.5rem 0;
+    padding: 0.5rem 2.5rem 0.5rem 0;
   }
 
   h4 {

@@ -7,16 +7,15 @@
   import Portfolio from './views/Portfolio.svelte'
   import Insight from './views/Insight.svelte'
   import Overview from './views/Overview.svelte'
-  import { getBasePrices } from './client'
-  import { basePrice, basePrices, exchangeId } from './store'
+  import { getCurrencies } from './client'
+  import { currency, exchangeId } from './store'
 
   const theme = localStorage.getItem('prefer-scheme')
   if (!theme) localStorage.setItem('prefer-scheme', Theme.DARK)
   document.body.classList.add(theme || Theme.DARK)
 
-  getBasePrices().then((prices) => {
-    $basePrices.push(...prices)
-    basePrice.set($basePrices[$exchangeId].ask_price)
+  getCurrencies().then((currencies) => {
+    currency.set(currencies[$exchangeId])
   })
 
   const routes: Route[] = [

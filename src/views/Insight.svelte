@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Header from '../components/Header.svelte'
-  import { basePrice } from '../store'
+  import { currency } from '../store'
 
   export let currentRoute: Record<string, any>
   const symbol: string = currentRoute.namedParams.symbol
@@ -65,49 +65,83 @@
 
     <div class="insight-blocks">
       <div class="insight-block">
-        <div class="label">Average Price</div>
+        <div class="label">Change</div>
         <div>
-          <div class="insight-row">
-            <span class="type">Volume</span>
-            <span class="value"
-              >{(insight.volume * insight.average_ask_price * $basePrice).toFixed(2)}</span
-            >
-          </div>
-          <div class="insight-row">
-            <span class="type">Change</span>
+          <div>
             <span
               class={insight.percent_change > 0.5
                 ? 'value pnl profit'
                 : insight.percent_change < -0.5
                 ? 'value pnl loss'
-                : 'value pnl neutral'}>{insight.percent_change.toFixed(2)}%</span
-            >
+                : 'value pnl neutral'}
+              >{insight.percent_change.toFixed(2)}%
+            </span>
           </div>
         </div>
       </div>
+
+      <div class="insight-block">
+        <div class="label">Volume</div>
+        <div>
+          <div>
+            <span class="value"
+              >{(insight.volume * insight.average_ask_price * $currency.ask_price).toLocaleString(
+                undefined,
+              )}
+              {$currency.code}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div class="insight-block">
         <div class="label">Average Price</div>
         <div>
           <div>
             <span class="type">Ask</span>
-            <span class="value">{insight.average_ask_price.toFixed(8)}</span>
+            <span class="value"
+              >{(insight.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
+                minimumFractionDigits: $currency.fraction_digits,
+                maximumFractionDigits: $currency.fraction_digits,
+              })}
+              {$currency.code}</span
+            >
           </div>
           <div>
             <span class="type">Bid</span>
-            <span class="value">{insight.average_bid_price.toFixed(8)}</span>
+            <span class="value"
+              >{(insight.average_bid_price * $currency.ask_price).toLocaleString(undefined, {
+                minimumFractionDigits: $currency.fraction_digits,
+                maximumFractionDigits: $currency.fraction_digits,
+              })}
+              {$currency.code}</span
+            >
           </div>
         </div>
       </div>
+
       <div class="insight-block">
         <div class="label">Best Price</div>
         <div>
           <div>
             <span class="type">Ask</span>
-            <span class="value">{insight.best_ask_price.toFixed(8)}</span>
+            <span class="value"
+              >{(insight.best_ask_price * $currency.ask_price).toLocaleString(undefined, {
+                minimumFractionDigits: $currency.fraction_digits,
+                maximumFractionDigits: $currency.fraction_digits,
+              })}
+              {$currency.code}</span
+            >
           </div>
           <div>
             <span class="type">Bid</span>
-            <span class="value">{insight.best_bid_price.toFixed(8)}</span>
+            <span class="value"
+              >{(insight.best_bid_price * $currency.ask_price).toLocaleString(undefined, {
+                minimumFractionDigits: $currency.fraction_digits,
+                maximumFractionDigits: $currency.fraction_digits,
+              })}
+              {$currency.code}</span
+            >
           </div>
         </div>
       </div>
@@ -119,7 +153,7 @@
       <thead>
         <tr>
           <th scope="col" class="text-start">Exchange</th>
-          <th scope="col" class="text-center">Ask Premium</th>
+          <th scope="col" class="text-end">Ask Premium</th>
           <th scope="col" class="text-end">Bid Premium</th>
         </tr>
       </thead>
@@ -129,10 +163,10 @@
             <td class="text-start">{premium.exchange.toUpperCase()} </td>
             <td
               class={premium.ask_premium > 0.5
-                ? 'text-center pnl loss'
+                ? 'text-end pnl loss'
                 : premium.ask_premium < -0.5
-                ? 'text-center pnl profit'
-                : 'text-center pnl neutral'}
+                ? 'text-end pnl profit'
+                : 'text-end pnl neutral'}
             >
               {premium.ask_premium.toFixed(2)}%
             </td>
@@ -156,7 +190,7 @@
       <thead>
         <tr>
           <th scope="col" class="text-start">Exchange</th>
-          <th scope="col" class="text-center">Best Routes</th>
+          <th scope="col" class="text-start">Best Routes</th>
           <th scope="col" class="text-end">PnL</th>
         </tr>
       </thead>
@@ -164,7 +198,7 @@
         {#each arbitrages as arbitrage}
           <tr>
             <td class="text-start">{arbitrage.exchange.toUpperCase()} </td>
-            <td class="text-center">{arbitrage.best_routes.toUpperCase()}</td>
+            <td class="text-start">{arbitrage.best_routes.toUpperCase()}</td>
             <td
               class={arbitrage.rate > 0.5
                 ? 'text-end pnl profit'
@@ -197,10 +231,6 @@
     justify-content: space-between;
     padding: 1.5rem;
     align-items: center;
-  }
-
-  div.insight-row {
-    text-align-last: justify;
   }
 
   div.insight-block + div.insight-block {

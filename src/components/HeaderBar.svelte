@@ -2,7 +2,7 @@
   import { getContext } from 'svelte'
   import { navigateTo } from 'svelte-router-spa'
   import Settings from '../modals/Settings.svelte'
-  import { baseCode, basePrice } from '../store'
+  import { currency } from '../store'
 
   const toHome = () => {
     navigateTo('/')
@@ -14,12 +14,14 @@
   }
 </script>
 
-<div>
+<div class="container">
   <img class="logo" src="/favicon.png" alt="hodler" on:click={toHome} />
-  <div>
+  <div class="items">
     <span class="currency-label">
-      {$basePrice?.toLocaleString(undefined, { maximumFractionDigits: 2 }) || ''}
-      {$baseCode || ''}
+      {$currency?.ask_price.toLocaleString(undefined, {
+        maximumFractionDigits: $currency?.fraction_digits,
+      }) || ''}
+      {$currency?.code || ''}
       = 1 BTC
     </span>
     <span class="material-symbols-outlined icon-settings" on:click={openSettingsModal}>
@@ -29,7 +31,7 @@
 </div>
 
 <style>
-  div {
+  div.container {
     background: var(--background-primary);
     display: flex;
     align-items: center;
@@ -38,7 +40,12 @@
     border-bottom: var(--border-primary);
     position: sticky;
     top: 0;
-    padding: 0 0.75rem;
+    padding: 0 1rem;
+  }
+
+  div.items {
+    display: flex;
+    align-items: center;
   }
 
   span.icon-settings {

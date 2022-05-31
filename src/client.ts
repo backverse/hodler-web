@@ -1,16 +1,17 @@
 /* eslint-disable camelcase */
 
-export class BasePrice {
+export class Currency {
   exchange: string
   ask_price: number
   bid_price: number
   code: string
+  fraction_digits: number
 }
 
-export const getBasePrices = () =>
-  fetch('https://hodler-signal.backverse.dev/base-prices')
-    .then<BasePrice[]>((response) => response.json())
-    .catch<BasePrice[]>((error: unknown) => {
+export const getCurrencies = () =>
+  fetch('https://hodler-signal.backverse.dev/currencies')
+    .then<Currency[]>((response) => response.json())
+    .catch<Currency[]>((error: unknown) => {
       console.error(error)
       return []
     })

@@ -3,8 +3,8 @@
   import { navigateTo } from 'svelte-router-spa'
   import Header from '../components/Header.svelte'
   import Search from '../components/Search.svelte'
-  import { basePrice } from '../store'
   import { getOverview, Overview } from '../client'
+  import { currency } from '../store'
 
   let cryptoToFilter = ''
   let overviews: Overview[] = []
@@ -27,33 +27,41 @@
     <thead>
       <tr>
         <th scope="col" class="text-start">Ticker</th>
-        <th scope="col" class="text-center">Price</th>
+        <th scope="col" class="text-end">Price</th>
         <th scope="col" class="text-end">24h Change</th>
       </tr>
     </thead>
     <tbody>
-      {#each overviews.filter( (oracle) => RegExp(cryptoToFilter, 'i').test(oracle.symbol), ) as oracle}
-        <tr on:click={cryptoClicked(oracle.symbol)}>
+      {#each overviews.filter( (overview) => RegExp(cryptoToFilter, 'i').test(overview.symbol), ) as overview}
+        <tr on:click={cryptoClicked(overview.symbol)}>
           <td class="text-start">
             <div>
               <img
                 class="symbol-img"
-                src="https://s2.coinmarketcap.com/static/img/coins/32x32/{oracle.icon_id}.png"
-                alt={oracle.symbol}
+                src="https://s2.coinmarketcap.com/static/img/coins/32x32/{overview.icon_id}.png"
+                alt={overview.symbol}
               />
-              {oracle.symbol.toUpperCase()}
+              {overview.symbol.toUpperCase()}
             </div>
           </td>
-          <td class="text-center">{(oracle.average_ask_price * $basePrice).toFixed(2)}</td>
+          <td class="text-end"
+            >{(overview.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
+              minimumFractionDigits: $currency.fraction_digits,
+              maximumFractionDigits: $currency.fraction_digits,
+            })}</td
+          >
           <td class="text-end">
             <div
-              class={oracle.percent_change > 0.5
+              class={overview.percent_change > 0.5
                 ? 'pnl profit'
-                : oracle.percent_change < -0.5
+                : overview.percent_change < -0.5
                 ? 'pnl loss'
                 : 'pnl neutral'}
             >
-              {oracle.percent_change.toFixed(2)}%
+              {overview.percent_change.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}%
             </div>
           </td>
         </tr>
