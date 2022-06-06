@@ -27,8 +27,8 @@
     <thead>
       <tr>
         <th scope="col" class="text-start">Ticker</th>
-        <th scope="col" class="text-end">Price</th>
-        <th scope="col" class="text-end">24h Change</th>
+        <th scope="col" class="text-end">Price / 24h Change</th>
+        <th scope="col" class="text-end">Arbitrage</th>
       </tr>
     </thead>
     <tbody>
@@ -44,13 +44,13 @@
               {overview.symbol.toUpperCase()}
             </div>
           </td>
-          <td class="text-end"
-            >{(overview.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
-              minimumFractionDigits: $currency.fraction_digits,
-              maximumFractionDigits: $currency.fraction_digits,
-            })}</td
-          >
           <td class="text-end">
+            <div>
+              {(overview.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
+                minimumFractionDigits: $currency.fraction_digits,
+                maximumFractionDigits: $currency.fraction_digits,
+              })}
+            </div>
             <div
               class={overview.percent_change > 0.5
                 ? 'pnl profit'
@@ -59,6 +59,20 @@
                 : 'pnl neutral'}
             >
               {overview.percent_change.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}%
+            </div>
+          </td>
+          <td class="text-end">
+            <div
+              class={overview.best_arbitrage > 0.5
+                ? 'pnl profit'
+                : overview.best_arbitrage < -0.5
+                ? 'pnl loss'
+                : 'pnl neutral'}
+            >
+              {overview.best_arbitrage.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}%

@@ -28,6 +28,7 @@ export class Overview {
   best_bid_exchange: string
   best_bid_price: number
   best_bid_ticker_name: string
+  best_arbitrage: number
   icon_id: string
 }
 
