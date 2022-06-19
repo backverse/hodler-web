@@ -3,7 +3,7 @@
   import { navigateTo } from 'svelte-router-spa'
   import Header from '../components/Header.svelte'
   import Search from '../components/Search.svelte'
-  import { getOverview, Overview } from '../client'
+  import { getOverviews, Overview } from '../client'
   import { currency } from '../store'
 
   let cryptoToFilter = ''
@@ -14,7 +14,7 @@
   }
 
   onMount(async () => {
-    overviews = await getOverview()
+    overviews = await getOverviews()
   })
 </script>
 

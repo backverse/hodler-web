@@ -1,66 +1,31 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { getInsight, type Arbitrage, type Premium, type Summary } from '../client'
   import Header from '../components/Header.svelte'
   import { currency } from '../store'
 
   export let currentRoute: Record<string, any>
   const symbol: string = currentRoute.namedParams.symbol
 
-  class Arbitrage {
-    exchange: string
-    best_routes: string
-    rate: number
-  }
-
-  class Insight {
-    symbol: string
-    volume: number
-    percent_change: number
-    average_ask_price: number
-    average_bid_price: number
-    best_ask_exchange: string
-    best_ask_price: number
-    best_ask_ticker_name: string
-    best_bid_exchange: string
-    best_bid_price: number
-    best_bid_ticker_name: string
-    best_arbitrage: number
-    best_ask_premium: number
-    best_bid_premium: number
-    symbol_id: string
-  }
-
-  class Premium {
-    exchange: string
-    ask_premium: number
-    ask_price: number
-    bid_premium: number
-    bid_price: number
-  }
-
   let arbitrages: Arbitrage[]
-  let insight: Insight
+  let summary: Summary
   let premiums: Premium[]
 
   onMount(async () => {
-    await fetch(`https://hodler-signal.backverse.dev/insights?symbol=${symbol}`)
-      .then<{ arbitrages: Arbitrage[]; insight: Insight; premiums: Premium[] }>((response) =>
-        response.json(),
-      )
-      .then((response) => {
-        arbitrages = response.arbitrages
-        insight = response.insight
-        premiums = response.premiums
-      })
+    await getInsight(symbol).then((response) => {
+      arbitrages = response.arbitrages
+      summary = response.summary
+      premiums = response.premiums
+    })
   })
 </script>
 
-{#if insight}
+{#if summary}
   <main>
     <Header
       header="Insight"
-      subheader={insight?.symbol.toUpperCase()}
-      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{insight.symbol_id}.png"
+      subheader={summary?.symbol.toUpperCase()}
+      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{summary.symbol_id}.png"
     />
 
     <div class="insight-blocks">
@@ -69,12 +34,12 @@
         <div>
           <div>
             <span
-              class={insight.percent_change > 0.5
+              class={summary.percent_change > 0.5
                 ? 'value pnl profit'
-                : insight.percent_change < -0.5
+                : summary.percent_change < -0.5
                 ? 'value pnl loss'
                 : 'value pnl neutral'}
-              >{insight.percent_change.toFixed(2)}%
+              >{summary.percent_change.toFixed(2)}%
             </span>
           </div>
         </div>
@@ -85,7 +50,7 @@
         <div>
           <div>
             <span class="value"
-              >{(insight.volume * insight.average_ask_price * $currency.ask_price).toLocaleString(
+              >{(summary.volume * summary.average_ask_price * $currency.ask_price).toLocaleString(
                 undefined,
               )}
               {$currency.code}
@@ -100,7 +65,7 @@
           <div>
             <span class="type">Ask</span>
             <span class="value"
-              >{(insight.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
+              >{(summary.average_ask_price * $currency.ask_price).toLocaleString(undefined, {
                 minimumFractionDigits: $currency.fraction_digits,
                 maximumFractionDigits: $currency.fraction_digits,
               })}
@@ -110,7 +75,7 @@
           <div>
             <span class="type">Bid</span>
             <span class="value"
-              >{(insight.average_bid_price * $currency.ask_price).toLocaleString(undefined, {
+              >{(summary.average_bid_price * $currency.ask_price).toLocaleString(undefined, {
                 minimumFractionDigits: $currency.fraction_digits,
                 maximumFractionDigits: $currency.fraction_digits,
               })}
@@ -126,7 +91,7 @@
           <div>
             <span class="type">Ask</span>
             <span class="value"
-              >{(insight.best_ask_price * $currency.ask_price).toLocaleString(undefined, {
+              >{(summary.best_ask_price * $currency.ask_price).toLocaleString(undefined, {
                 minimumFractionDigits: $currency.fraction_digits,
                 maximumFractionDigits: $currency.fraction_digits,
               })}
@@ -136,7 +101,7 @@
           <div>
             <span class="type">Bid</span>
             <span class="value"
-              >{(insight.best_bid_price * $currency.ask_price).toLocaleString(undefined, {
+              >{(summary.best_bid_price * $currency.ask_price).toLocaleString(undefined, {
                 minimumFractionDigits: $currency.fraction_digits,
                 maximumFractionDigits: $currency.fraction_digits,
               })}
@@ -161,23 +126,39 @@
         {#each premiums as premium}
           <tr>
             <td class="text-start">{premium.exchange.toUpperCase()} </td>
-            <td
-              class={premium.ask_premium > 0.5
-                ? 'text-end pnl loss'
-                : premium.ask_premium < -0.5
-                ? 'text-end pnl profit'
-                : 'text-end pnl neutral'}
-            >
-              {premium.ask_premium.toFixed(2)}%
+            <td class="text-end">
+              <div>
+                {(premium.ask_price * $currency.ask_price).toLocaleString(undefined, {
+                  minimumFractionDigits: $currency.fraction_digits,
+                  maximumFractionDigits: $currency.fraction_digits,
+                })}
+              </div>
+              <div
+                class={premium.ask_premium > 0.5
+                  ? 'pnl loss'
+                  : premium.ask_premium < -0.5
+                  ? 'pnl profit'
+                  : 'pnl neutral'}
+              >
+                {premium.ask_premium.toFixed(2)}%
+              </div>
             </td>
-            <td
-              class={premium.bid_premium > 0.5
-                ? 'text-end pnl profit'
-                : premium.bid_premium < -0.5
-                ? 'text-end pnl loss'
-                : 'text-end pnl neutral'}
-            >
-              {premium.bid_premium.toFixed(2)}%
+            <td class="text-end">
+              <div>
+                {(premium.bid_price * $currency.ask_price).toLocaleString(undefined, {
+                  minimumFractionDigits: $currency.fraction_digits,
+                  maximumFractionDigits: $currency.fraction_digits,
+                })}
+              </div>
+              <div
+                class={premium.bid_premium > 0.5
+                  ? 'pnl profit'
+                  : premium.bid_premium < -0.5
+                  ? 'pnl loss'
+                  : 'pnl neutral'}
+              >
+                {premium.bid_premium.toFixed(2)}%
+              </div>
             </td>
           </tr>
         {/each}

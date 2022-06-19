@@ -32,10 +32,56 @@ export class Overview {
   icon_id: string
 }
 
-export const getOverview = () =>
-  fetch('https://hodler-signal.backverse.dev/overview')
+export const getOverviews = () =>
+  fetch('https://hodler-signal.backverse.dev/overviews')
     .then<Overview[]>((response) => response.json())
     .catch<Overview[]>((error: unknown) => {
       console.error(error)
       return []
+    })
+
+export class Arbitrage {
+  exchange: string
+  best_routes: string
+  rate: number
+}
+
+export class Summary {
+  symbol: string
+  volume: number
+  percent_change: number
+  average_ask_price: number
+  average_bid_price: number
+  best_ask_exchange: string
+  best_ask_price: number
+  best_ask_ticker_name: string
+  best_bid_exchange: string
+  best_bid_price: number
+  best_bid_ticker_name: string
+  best_arbitrage: number
+  best_ask_premium: number
+  best_bid_premium: number
+  symbol_id: string
+}
+
+export class Premium {
+  exchange: string
+  ask_premium: number
+  ask_price: number
+  bid_premium: number
+  bid_price: number
+}
+
+export class Insight {
+  arbitrages: Arbitrage[]
+  premiums: Premium[]
+  summary: Summary
+}
+
+export const getInsight = (symbol: string) =>
+  fetch(`https://hodler-signal.backverse.dev/insights?symbol=${symbol}`)
+    .then<Insight>((response) => response.json())
+    .catch<Insight>((error: unknown) => {
+      console.error(error)
+      return { arbitrages: [], summary: {} as any, premiums: [] }
     })
