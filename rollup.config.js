@@ -8,6 +8,7 @@ import sveltePreprocess from 'svelte-preprocess'
 import typescript from 'rollup-plugin-typescript2'
 import css from 'rollup-plugin-css-only'
 import alias from '@rollup/plugin-alias'
+import json from '@rollup/plugin-json'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -42,12 +43,11 @@ export default {
   },
   plugins: [
     alias({ entries: [{ find: '@app', replacement: 'src' }] }),
+    json({ compact: true }),
     svelte({
       preprocess: sveltePreprocess({ sourceMap: !production }),
-      compilerOptions: {
-        // enable run-time checks when not in production
-        dev: !production,
-      },
+      // enable run-time checks when not in production
+      compilerOptions: { dev: !production },
     }),
     // we'll extract any component CSS out into
     // a separate file - better for performance
@@ -58,15 +58,9 @@ export default {
     // some cases you'll need additional configuration -
     // consult the documentation for details:
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
-    resolve({
-      browser: true,
-      dedupe: ['svelte'],
-    }),
+    resolve({ browser: true, dedupe: ['svelte'] }),
     commonjs(),
-    typescript({
-      sourceMap: !production,
-      inlineSources: !production,
-    }),
+    typescript({ sourceMap: !production, inlineSources: !production }),
     compileTypescript(),
 
     // In dev mode, call `npm run start` once

@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: space-between;
     height: 3.5rem;
-    border-bottom: var(--border-primary);
+    border-bottom: 1px solid var(--border-primary);
     position: sticky;
     top: 0;
     padding: 0 1rem;

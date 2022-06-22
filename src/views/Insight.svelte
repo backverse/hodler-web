@@ -215,7 +215,7 @@
   }
 
   div.insight-block + div.insight-block {
-    border-top: var(--border-primary);
+    border-top: 1px solid var(--border-primary);
   }
 
   div.insight-block .label {
