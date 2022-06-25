@@ -5,6 +5,7 @@ export class Currency {
   ask_price: number
   bid_price: number
   code: string
+  symbol: string
   fraction_digits: number
 }
 

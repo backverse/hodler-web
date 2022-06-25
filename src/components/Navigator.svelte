@@ -31,6 +31,7 @@
 <style>
   .navigator-container {
     background: var(--background-secondary);
+    border-top: 1px solid var(--border-primary);
     height: 3.5rem;
     position: fixed;
     bottom: 0;
@@ -51,10 +52,12 @@
     display: grid;
     flex: 1 1;
     justify-items: center;
+    cursor: pointer;
   }
 
   .material-symbols-outlined {
     font-size: 1rem;
+    cursor: pointer;
   }
 
   .active {

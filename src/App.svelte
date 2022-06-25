@@ -4,18 +4,15 @@
   import Modal from 'svelte-simple-modal'
   import { getCurrencies } from './client'
   import Layout from './components/Layout.svelte'
-  import { Theme } from './constant'
-  import { currency, exchangeId } from './store'
+  import { currency, exchange, getTheme } from './store'
   import Insight from './views/Insight.svelte'
   import Overview from './views/Overview.svelte'
   import Portfolio from './views/Portfolio.svelte'
 
-  const theme = localStorage.getItem('prefer-scheme')
-  if (!theme) localStorage.setItem('prefer-scheme', Theme.DARK)
-  document.body.classList.add(theme || Theme.DARK)
+  document.body.classList.add(getTheme())
 
   getCurrencies().then((currencies) => {
-    currency.set(currencies[$exchangeId])
+    currency.set(currencies.find((c) => c.exchange === $exchange))
   })
 
   const routes: Route[] = [
