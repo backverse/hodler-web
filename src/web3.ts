@@ -12,6 +12,9 @@ export const web3Modal = new Web3Modal({
     hover: 'var(--background-secondary)',
   },
   providerOptions: {
+    binancechainwallet: {
+      package: true,
+    },
     walletconnect: {
       package: WalletConnectProvider,
       options: {
