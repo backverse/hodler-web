@@ -9,6 +9,7 @@
     "start": "sirv public --no-clear -s",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "clean": "rm -rf .pnp.cjs .pnp.loader.mjs yarn.lock node_modules public/build .yarn/cache .yarn/unplugged .yarn/install-state.gz && touch yarn.lock",
+    "lint": "eslint src/** --fix && prettier src/**/*.{ts,svelte} -w",
     "upgrade": "yarn set version latest && yarn up -R '*' && yarn dlx @yarnpkg/sdks vscode && yarn dedupe"
   },
   "devDependencies": {
@@ -24,6 +25,10 @@
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-xo": "^0.41.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.7.0",
     "rollup": "^2.75.7",

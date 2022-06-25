@@ -3,3 +3,7 @@ semi          = false
 singleQuote   = true
 tabWidth      = 2
 trailingComma = "all"
+
+[[overrides]]
+files           = '*.svelte'
+options.plugins = ['prettier-plugin-svelte']

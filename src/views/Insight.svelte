@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { getInsight, type Arbitrage, type Premium, type Summary } from '../client'
+  import { type Arbitrage, type Premium, type Summary, getInsight } from '../client'
   import Header from '../components/Header.svelte'
   import { currency } from '../store'
 
   export let currentRoute: Record<string, any>
-  const symbol: string = currentRoute.namedParams.symbol
+  const { symbol } = currentRoute.namedParams as Record<string, string>
 
   let arbitrages: Arbitrage[]
   let summary: Summary

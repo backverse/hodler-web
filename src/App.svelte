@@ -2,13 +2,13 @@
   import { Router } from 'svelte-router-spa'
   import type { Route } from 'svelte-router-spa/types/components/router'
   import Modal from 'svelte-simple-modal'
+  import { getCurrencies } from './client'
   import Layout from './components/Layout.svelte'
   import { Theme } from './constant'
-  import Portfolio from './views/Portfolio.svelte'
+  import { currency, exchangeId } from './store'
   import Insight from './views/Insight.svelte'
   import Overview from './views/Overview.svelte'
-  import { getCurrencies } from './client'
-  import { currency, exchangeId } from './store'
+  import Portfolio from './views/Portfolio.svelte'
 
   const theme = localStorage.getItem('prefer-scheme')
   if (!theme) localStorage.setItem('prefer-scheme', Theme.DARK)

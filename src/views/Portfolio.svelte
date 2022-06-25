@@ -1,13 +1,14 @@
 <script lang="ts">
-  import Header from '../components/Header.svelte'
   import { abi as ERC20 } from '@openzeppelin/contracts/build/contracts/ERC20.json'
-  import { defaultEvmStores, web3, connected, selectedAccount, chainId } from 'svelte-web3'
-  import { contracts, web3Modal } from '../web3'
-  import { prettyNumber } from '../utils'
   import Chart from 'chart.js/auto/auto'
+  import { onMount } from 'svelte'
+  import { chainId, connected, defaultEvmStores, selectedAccount, web3 } from 'svelte-web3'
+  import Header from '../components/Header.svelte'
+  import { prettyNumber } from '../utils'
+  import { contracts, web3Modal } from '../web3'
 
   let allocationCanvas: HTMLCanvasElement
-  let allocationChart: Chart
+  let allocationChart
   let holdings: {
     name: string
     symbol: string
@@ -19,19 +20,19 @@
   const connect = async () => {
     const provider = await web3Modal.connect()
 
-    provider.on('accountsChanged', (accounts: string[]) => {
+    provider.on('accountsChanged', () => {
       onAccountChange()
     })
 
-    provider.on('chainChanged', (chainId: number) => {
+    provider.on('chainChanged', () => {
       onAccountChange()
     })
 
-    provider.on('connect', (info: { chainId: number }) => {
+    provider.on('connect', () => {
       onAccountChange()
     })
 
-    provider.on('disconnect', (error: { code: number; message: string }) => {
+    provider.on('disconnect', () => {
       disconnect()
     })
 
@@ -40,7 +41,7 @@
   }
 
   const onAccountChange = async () => {
-    const balance = await new $web3.eth.getBalance($selectedAccount)
+    const balance = await $web3.eth.getBalance($selectedAccount)
 
     holdings = [
       {
@@ -95,6 +96,10 @@
   const disconnect = async () => {
     await defaultEvmStores.disconnect()
   }
+
+  onMount(() => {
+    if ($connected) onAccountChange()
+  })
 </script>
 
 <main>

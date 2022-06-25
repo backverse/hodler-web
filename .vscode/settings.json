@@ -1,5 +1,6 @@
 {
   "eslint.nodePath": ".yarn/sdks",
+  "eslint.validate": ["typescript", "svelte"],
   "evenBetterToml.formatter.alignEntries": true,
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "search.exclude": {

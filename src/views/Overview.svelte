@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { navigateTo } from 'svelte-router-spa'
+  import { getOverviews, Overview } from '../client'
   import Header from '../components/Header.svelte'
   import Search from '../components/Search.svelte'
-  import { getOverviews, Overview } from '../client'
   import { currency } from '../store'
 
   let cryptoToFilter = ''
