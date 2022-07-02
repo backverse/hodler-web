@@ -30,7 +30,7 @@ export class Overview {
   best_bid_price: number
   best_bid_ticker_name: string
   best_arbitrage: number
-  icon_id: string
+  icon: string
 }
 
 export const getOverviews = () =>
@@ -42,8 +42,10 @@ export const getOverviews = () =>
     })
 
 export class Arbitrage {
-  exchange: string
-  best_routes: string
+  buy_low_exchange: string
+  buy_low_price: number
+  sell_high_exchange: string
+  sell_high_price: number
   rate: number
 }
 
@@ -62,7 +64,7 @@ export class Summary {
   best_arbitrage: number
   best_ask_premium: number
   best_bid_premium: number
-  symbol_id: string
+  icon: string
 }
 
 export class Premium {

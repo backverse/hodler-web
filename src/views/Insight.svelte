@@ -20,12 +20,12 @@
   })
 </script>
 
-{#if summary}
+{#if summary && $currency}
   <main>
     <Header
       header="Insight"
       subheader={summary?.symbol.toUpperCase()}
-      subheaderImg="https://s2.coinmarketcap.com/static/img/coins/32x32/{summary.symbol_id}.png"
+      subheaderImg={summary.icon}
     />
 
     <div class="insight-blocks">
@@ -170,16 +170,36 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col" class="text-start">Exchange</th>
-          <th scope="col" class="text-start">Best Routes</th>
+          <th scope="col" class="text-start">Buy Low</th>
+          <th scope="col" class="text-start">Sell High</th>
           <th scope="col" class="text-end">PnL</th>
         </tr>
       </thead>
       <tbody>
         {#each arbitrages as arbitrage}
           <tr>
-            <td class="text-start">{arbitrage.exchange.toUpperCase()} </td>
-            <td class="text-start">{arbitrage.best_routes.toUpperCase()}</td>
+            <td class="text-start">
+              <div>
+                {arbitrage.buy_low_exchange.toUpperCase()}
+              </div>
+              <div class="pnl neutral">
+                {(arbitrage.buy_low_price * $currency.ask_price).toLocaleString(undefined, {
+                  minimumFractionDigits: $currency.fraction_digits,
+                  maximumFractionDigits: $currency.fraction_digits,
+                })}
+              </div>
+            </td>
+            <td class="text-start">
+              <div>
+                {arbitrage.sell_high_exchange.toUpperCase()}
+              </div>
+              <div class="pnl neutral">
+                {(arbitrage.sell_high_price * $currency.ask_price).toLocaleString(undefined, {
+                  minimumFractionDigits: $currency.fraction_digits,
+                  maximumFractionDigits: $currency.fraction_digits,
+                })}
+              </div>
+            </td>
             <td
               class={arbitrage.rate > 0.5
                 ? 'text-end pnl profit'
